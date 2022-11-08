@@ -73,7 +73,7 @@ def get_default_color_etc_settings():
 
 def get_diamond_size(ax=None):
   ax = _get_axes(ax=ax)
-  return get_width(ax=ax) * my_default_diamond_size * __diamond_size_factor
+  return get_canvas_width(ax=ax) * my_default_diamond_size * __diamond_size_factor
 
 
 ########################################################################
@@ -104,17 +104,26 @@ def _get_axes(ax):
   return ax
 
 
-def get_width(ax=None):
+def get_canvas_width(ax=None):
   ax = _get_axes(ax=ax)
-  xlims = ax.set_xlim()
+  xlims = ax.get_xlim()
   return (xlims[1] - xlims[0])
 
 
-def get_height(ax=None):
+def get_canvas_height(ax=None):
   ax = _get_axes(ax=ax)
-  ylims = ax.set_ylim()
+  ylims = ax.get_ylim()
   return (ylims[1] - ylims[0])
 
+def get_canvas_left(ax=None):
+  ax = _get_axes(ax=ax)
+  xlims = ax.get_xlim()
+  return xlims[0]
+
+def get_canvas_bottom(ax=None):
+  ax = _get_axes(ax=ax)
+  ylims = ax.get_ylim()
+  return ylims[0]
 
 ########################################################################
 

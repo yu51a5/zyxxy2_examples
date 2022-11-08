@@ -110,6 +110,8 @@ class Shape:
   def _get_xy(something):
     if isinstance(something, np.ndarray):
       return something
+    elif isinstance(something, list):
+      return np.array(something)
     elif isinstance(something, Polygon):
       return something.get_xy()
     raise Exception("Data type ", type(something), " is not handled")
@@ -446,6 +448,8 @@ class Shape:
 
 ##################################################################
   def clip(self, clip_outline):
+    if clip_outline is None:
+      return
     for what in [self.patch, self.line, self.outline]:
       if what is None:
         continue

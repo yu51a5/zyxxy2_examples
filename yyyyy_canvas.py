@@ -338,6 +338,7 @@ def create_canvas_and_axes(
     tick_step_y=None,
     add_border=True,
     title=None,
+    inspiration_addon=None,
     title_pad=my_default_display_params['title_pad'],
     xlabel=my_default_display_params['x_axis_label'],
     ylabel=my_default_display_params['y_axis_label'],
@@ -506,7 +507,9 @@ def create_canvas_and_axes(
     params_for_axes['background_color'] = None
     # handle the model drawing
     if isinstance(model, str):
-      prepare_axes(ax=axes_model, title="Inspiration", **params_for_axes)
+      prepare_axes(ax=axes_model, 
+                   title="Inspiration" + ("" if inspiration_addon is None else f': {inspiration_addon}'), 
+                   **params_for_axes)
       image = filename_to_image(filename=model)
       scaling_factor = model_zoom * min(canvas_width / image.shape[1],
                                         canvas_height / image.shape[0])
