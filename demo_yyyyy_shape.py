@@ -28,6 +28,7 @@ from yyyyy_files import write_file
 from MY_yyyyy_SETTINGS_general import my_default_color_etc_settings, default_extreme_layer_nb
 from MY_yyyyy_SETTINGS_demo import figure_params, demo_style_widgets_value_ranges, my_default_demo_shapes, my_default_demo_style
 from MY_yyyyy_SETTINGS_widgets import widget_params
+from demo_yyyyy_shape_helper import canvas_width, canvas_height, slider_range
 
 demo_style_widgets_value_ranges["joinstyle"] = [
   'rounded', 'straight', 'cut off'
@@ -37,33 +38,6 @@ demo_style_widgets_value_ranges["capstyle"] = [
 ]
 
 plt.rcParams.update({'font.size': figure_params['font_size']})
-
-canvas_width = figure_params['canvas_width']
-canvas_height = figure_params['canvas_height']
-half_min_size = min(canvas_width, canvas_height) / 2
-
-slider_range = {
-  'half_min_size': [0., half_min_size,
-                    int(half_min_size / 2), 1],
-  'plus_minus_half_min_size':
-  [-half_min_size, half_min_size,
-   int(half_min_size / 2), .1],
-  'half_min_size_34': [0., half_min_size,
-                       int(half_min_size * 3 / 4), 1],
-  'half_width': [0., canvas_width, int(canvas_width / 2), 1],
-  'half_height': [0., canvas_height,
-                  int(canvas_height / 2), 1],
-  'stretch': [-3, 3, 1, 0.1],
-  'from_0_to_5': [0., 5, 1, 0.1],
-  'from_0_to_1': [0., 1, 0.6, 0.05],
-  '5_to_50': [5, 50, 10, 5],
-  'turn': [0, full_turn_angle, 0, full_turn_angle / 12],
-  'double_turn': [0, 2 * full_turn_angle, 0, full_turn_angle / 12],
-  'long_turn': [0, 5 * full_turn_angle, 0, full_turn_angle / 4],
-  'half_turn': [0, full_turn_angle / 2, 0, full_turn_angle / 12],
-  'quarter_turn': [0, full_turn_angle / 4, 0, full_turn_angle / 12],
-  'vertices': [1, 12, 5, 1],
-}
 
 # variables that will be populated later
 sides = ['left', 'right']
@@ -229,7 +203,7 @@ main_ax = _find_scale_place_axes(
   title_pad=0,
   xlabel=figure_params['x_axis_label'],
   ylabel=figure_params['y_axis_label'],
-  tick_step=figure_params['tick_step'],
+  tick_step_x=figure_params['tick_step'], tick_step_y=figure_params['tick_step'],
   xy=(plot_ax_left - figure_params['add_width_to_axes_background'],
       plot_ax_bottom - figure_params['add_height_to_axes_background']))
 

@@ -14,7 +14,7 @@
 ##  GNU General Public License for more details.
 ########################################################################
 
-from yyyyy_shape_style import _get_renderer, _get_axes, default_text_bubble_params
+from yyyyy_shape_style import _get_renderer, _get_axes, get_default_text_bubble_params
 from yyyyy_utils import atan, calc_Pythagoras
 from yyyyy_shape_functions import draw_a_triangle
 
@@ -36,11 +36,11 @@ class WordBubble:
     used_argnames = []
     for dict_entry in param_names_dictionary:
       if isinstance(dict_entry, str):
-        result[dict_entry] = kwargs[dict_entry] if dict_entry in kwargs else default_text_bubble_params[dict_entry]
+        result[dict_entry] = kwargs[dict_entry] if dict_entry in kwargs else get_default_text_bubble_params(dict_entry)
         if dict_entry in kwargs:
           used_argnames += [dict_entry]
       else:
-        result[dict_entry[0]] = kwargs[dict_entry[1]] if dict_entry[1] in kwargs else default_text_bubble_params[dict_entry[1]]
+        result[dict_entry[0]] = kwargs[dict_entry[1]] if dict_entry[1] in kwargs else get_default_text_bubble_params(dict_entry[1])
         if dict_entry[1] in kwargs:
           used_argnames += [dict_entry[1]]
     return result, used_argnames

@@ -45,6 +45,12 @@ def set_default_diamond_size_factor(value=1.):
 default_color_etc_settings = copy.deepcopy(my_default_color_etc_settings)
 default_text_bubble_params = copy.deepcopy(my_default_text_bubble_params)
 
+def get_default_text_bubble_params(name):
+  return default_text_bubble_params[name]
+
+def scale_default_fontsize(mult):
+  global default_text_bubble_params
+  default_text_bubble_params['fontsize'] *= mult
 
 def reset_default_color_etc_settings(diamond_size_factor_override=1):
   global default_color_etc_settings, default_text_bubble_params, __diamond_size_factor

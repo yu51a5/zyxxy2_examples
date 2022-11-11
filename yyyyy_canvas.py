@@ -33,7 +33,7 @@ from yyyyy_shape_class import Shape
 from yyyyy_word_bubbles import WordBubble
 from yyyyy_files import filename_to_image, show_image
 from yyyyy_utils import equal_or_almost
-from MY_yyyyy_SETTINGS_general import my_default_font_sizes, my_default_display_params, my_default_image_params, my_default_animation_params, my_default_images_folder, default_extreme_layer_nb
+from MY_yyyyy_SETTINGS_general import my_default_font_sizes, my_default_display_params, my_default_image_params, my_default_animation_params, my_default_images_folder
 
 USE_PLT_SHOW = True
 IMAGES_FOLDER = my_default_images_folder

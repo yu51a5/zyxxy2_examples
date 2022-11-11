@@ -387,6 +387,14 @@ class Shape:
         useful_args['center_x'] = kwargs_common['center'][0]
         useful_args['center_y'] = kwargs_common['center'][1]
 
+      if 'diamond' in kwargs_common:
+        useful_args['center_x'] = kwargs_common['diamond'][0]
+        useful_args['center_y'] = kwargs_common['diamond'][1]
+
+      if ('diamond_x' in kwargs_common) and ('diamond_y' in kwargs_common):
+        useful_args['center_x'] = kwargs_common['diamond_x']
+        useful_args['center_y'] = kwargs_common['diamond_y']
+
       new_contour = yyyyy_coordinates._init_shift(contour=self.get_xy(), **useful_args)    
 
       # updating the elements

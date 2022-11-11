@@ -121,7 +121,7 @@ def get_type_given_shapename(shapename):
 
 shape_names_params_dicts_definition = {
                             'a_segment' : {'length': 'half_min_size'}, 
-                            'a_power_curve' : {'end_1' : ['half_width', 1], 'end_2' : 'half_width', 'power': 'stretch', 'nb_intermediate_points': '5_to_50'},             
+                            'a_power_curve' : {'end_1' : ['half_width', 0], 'end_2' : 'half_width', 'power': ['stretch', 0.5], 'nb_intermediate_points': '5_to_50'},             
                             'a_triangle': {'width' : 'half_min_size', 'height' : 'half_min_size'}, 
                             'a_square': {'side' : 'half_min_size'}, 
                             'a_rectangle': {'width' : ['half_min_size', 4], 'height' : ['half_min_size', 2]}, 
@@ -137,9 +137,9 @@ shape_names_params_dicts_definition = {
                             'a_heart': {'angle_top_middle' : ['quarter_turn', 3], 'tip_addon' : 'from_0_to_5'},
                             'an_egg' : {'power' : ['vertices', 3], 'height_widest_point': 'from_0_to_1', 'width' : ['half_width', 4], 'height' : ['half_height', 5]},
                             'a_sector': {'angle_start' : 'turn', 'angle_end' : ['double_turn', 3], 'radius' : 'half_min_size', 'radius_2' : 'half_min_size_34'},
-                            'an_elliptic_sector': {'angle_start' : 'turn', 'angle_end' : ['double_turn', 3], 'height' : 'half_min_size', 'width' : 'half_min_size'},
+                            'an_elliptic_sector': {'angle_start' : 'turn', 'angle_end' : ['double_turn', 3], 'height' : 'half_min_size', 'width' : ['half_min_size', 5]},
                             'a_zigzag' : {'width': 'half_min_size', 'height': 'half_min_size', 'angle_start': 'turn', 'nb_segments': 'vertices'},
-                            'a_wave' : {'width': 'half_min_size', 'height': 'half_min_size', 'angle_start': 'turn', 'nb_waves': 'vertices'},
+                            'a_wave' : {'width': 'half_min_size', 'height': 'half_min_size', 'angle_start': 'turn', 'nb_waves': ['vertices', 2]},
                             'a_coil' : {'angle_start' : 'turn', 'nb_turns' : ['from_0_to_5', 3], 'speed_x' : 'from_0_to_5', 'speed_out' : ['from_0_to_5', 1.2]},
                             'a_squiggle': {'angle_start' : ['turn', 0], 'angle_end' : ['double_turn', 24], 'speed_x' : ['from_0_to_5', 3], 'width' : ['half_width', 2], 'height' : 'half_height'}}
 
