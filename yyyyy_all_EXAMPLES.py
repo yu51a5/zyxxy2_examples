@@ -5,7 +5,7 @@ from yyyyy_shape_functions import draw_an_egg, draw_a_drop, draw_a_circle, draw_
 from yyyyy_coordinates import build_an_arc, link_contours, build_a_circle, build_a_zigzag
 from yyyyy_layers import shift_layers, turn_layers, stretch_layers, new_layer, new_layer_outline_behind
 from yyyyy_utils import random_element, random_number, full_turn_angle, cos, sin, find_GCD, turn
-from yyyyy_colors import create_gradient_colors
+from yyyyy_colors import create_gradient_colors, get_color_tint
 
 #########################################################
 ## THE FLAGS                                           ##
@@ -158,6 +158,17 @@ def example_penguins():
 
   show_and_save()
 
+#######################################################
+def draw_a_gradient_chessboard(my_color='blue', size=10):
+  create_canvas_and_axes(canvas_width=size, canvas_height=size)
+  for s1 in range(size):
+    for s2 in range(size):
+      if s1 <= s2:
+        color = get_color_tint(my_color, (s1+s2)/(2*size-2))
+      else:
+        color = my_color if (s1 - s2) % 2 else 'white'
+      draw_a_square(left=s1, bottom=s2, side=1, color=color)
+  show_and_save()
 
 #########################################################
 ## YELLOW CAT                                          ##

@@ -68,7 +68,7 @@ class ShapeStyleAttribute:
 
   def __set__(self, instance, val):
     _p_name, _polygon = self.__get_polygon(instance)
-    set_polygon_style(something=_polygon, attr_name=_p_name, kwargs={self.name : val}, parent=instance)
+    set_polygon_style(something=_polygon, attr_name=_p_name, kwargs={self.name : val})
 
 ##################################################################
 ## SHAPE                                                        ## 
