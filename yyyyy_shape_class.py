@@ -17,6 +17,7 @@
 import copy
 import numpy as np
 from matplotlib.pyplot import Polygon, gca
+from matplotlib.transforms import Bbox
 import yyyyy_coordinates
 from yyyyy_utils import is_the_same_contour, move_by_matrix, get_rotation_matrix, sin, cos, is_a_number
 from yyyyy_shape_style import set_polygon_style, get_diamond_size, format_arg_dict, line_arg_types, \
@@ -222,6 +223,10 @@ class Shape:
     if self.line is not None:
       return Shape._get_xy(self.line)
     raise Exception("Unable to identify xy")
+
+  def get_bbox(self):
+    xy_ = self.get_xy()
+    return Bbox.from_extents(min(xy_[:, 0]), min(xy_[:, 1]), max(xy_[:, 0]), max(xy_[:, 1]))
 
 ##################################################################
   def get_axes(self):

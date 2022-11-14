@@ -14,7 +14,7 @@
 ##  GNU General Public License for more details.
 ########################################################################
 
-from yyyyy_shape_style import _get_renderer, _get_axes, get_default_text_bubble_params
+from yyyyy_shape_style import _get_axes, get_default_text_bubble_params
 from yyyyy_utils import atan, calc_Pythagoras
 from yyyyy_shape_functions import draw_a_triangle
 
@@ -50,7 +50,7 @@ class WordBubble:
 
     ax = _get_axes(ax=ax)
       
-    props, used_argnames = WordBubble._create_params_subdictionary([['facecolor', 'backgroundcolor'], ['alpha', 'opacity'], 'pad', # 'rounding_size', 
+    props, used_argnames = WordBubble._create_params_subdictionary([['facecolor', 'background_color'], ['alpha', 'opacity'], 'pad', # 'rounding_size', 
     ['edgecolor', 'linecolor'], 'linewidth', ['zorder', 'layer_nb']], kwargs)
     props['boxstyle'] = 'round'
   
@@ -95,18 +95,17 @@ class WordBubble:
   def make_invisible(self):
     self.make_visible(False)
 
-  def set_text(self, text, mid_override=None):
-    self.text_box.set_text(text)
-    
-    
-    tbb = self.text_box.get_window_extent(renderer=_get_renderer())   
+  def get_bbox(self):
     tbb_it = self.text_box.get_bbox_patch().get_bbox().transformed(self.text_box.axes.transData.inverted())#tbb.transformed(self.text_box.axes.transData.inverted())
+    return tbb_it
 
-    #print(tbb_it, self.text_box.get_position())
+  def get_text(self):
+    return self.text_box.get_text()
 
+  def set_text(self, text, mid_override=None):
+    self.text_box.set_text(text)  
+    tbb_it = self.get_bbox()
     mid = mid_override if mid_override is not None else [0.5*(tbb_it.x1+tbb_it.x0), 0.5*(tbb_it.y1+tbb_it.y0)]
-
-    x, y = self.text_box.get_position()
 
     if self.connection is None:
       pass
@@ -124,7 +123,3 @@ class WordBubble:
 def draw_a_speech_bubble(text, x, y, **kwargs):
   wb = WordBubble(text, x, y, **kwargs)
   return wb
-
-def draw_a_code_bubble(text, x, y, **kwargs):
-  cb = WordBubble(text, x, y, fontfamily='freemono', color='white', backgroundcolor='black', **kwargs)
-  return cb

@@ -4,12 +4,12 @@ from yyyyy_utils import random_number
 ball_radius = 0.5
 linewidth = 2
 
-create_canvas_and_axes(  canvas_width = 140,
+create_canvas_and_axes(  canvas_width = 160,
                               canvas_height = 70,
                               bottom_left_coords = [-1, -1],
                               #tick_step = 4,
                               #title = "Random Circles",
-                              background_color='olive',
+                              background_color='lightcyan',
                               diamond_size=0)
 
 all_y = []
@@ -22,18 +22,18 @@ def color_mixer(startcolor, endcolor, lion):
   resulting_color_in_the_middle = [red_in_the_middle,  green_in_the_middle ,  blue_in_the_middle ]
   return resulting_color_in_the_middle
                                                  
-def draw_a_gradient_line(startpoint, endpoint, shift_x, shift_y, startcolor = [1, 0, 0], # [0.76, 0.44, 0.76], 
-endcolor =  [1, 1, 0]): # [0.76, 0.54, 0.34]
+def draw_a_gradient_line(startpoint, endpoint, shift_x, shift_y, startcolor = [(6*16+4)/255, 9/16, 1], # [0.76, 0.44, 0.76], 
+endcolor =  [(13*16+12)/255, (2*16+6)/255, (7*16+15)/255]): # [0.76, 0.54, 0.34]
   
   our_height = endpoint[1] -  startpoint[1]
   our_width = endpoint[0] -  startpoint[0]
 
-  for _ in range(50):
+  for _ in range(15):
     lion_position = random_number(0, 1)
     x = lion_position * our_width +  startpoint[0]
     y = lion_position * our_height + startpoint[1]
-    lion_color = (y + shift_y - 20) / 40
-    draw_a_circle(center=[x+shift_x, y+shift_y], layer_nb=0, outline_layer_nb=-1, radius=3,
+    lion_color = (y + shift_y - 15) / 45
+    draw_a_star(center=[x+shift_x, y+shift_y], layer_nb=0, outline_layer_nb=-1, radius_1=2, radius_2=1, ends_qty=8,
                   color=color_mixer(startcolor=startcolor, endcolor=endcolor, lion=lion_color), #[0.36, 0.71, lion], 
                   outline_linewidth=linewidth)
     
@@ -56,11 +56,13 @@ bottom_line_y = 40
 target_x = 4
 
 # Kian needs to creare a line like 'HAPPY\nKIAN':
-for letter in 'HAPPY\nNOWRUZ':
+for letter in 'HAPPY NEW\nYEAR': #NOWRUZ':
 
   if letter == '\n':
-    bottom_line_y -= 20
-    target_x = 4
+    bottom_line_y -= 25
+    target_x = 4 + (157 - 70) / 2
+  elif letter == ' ':
+    target_x += 10
   else:                                                     
     assert letter in dictionary_letters.keys()
 
@@ -76,6 +78,6 @@ for letter in 'HAPPY\nNOWRUZ':
     shift_y = bottom_line_y -min([min(seg[0][1], seg[1][1]) for seg in segments_of_the_letter] ) 
     for startpoint, endpoint in segments_of_the_letter:
       draw_a_gradient_line(startpoint=startpoint, endpoint=endpoint, shift_x=shift_x, shift_y=shift_y)
-    target_x += length + 6
+    target_x += length + 6.3
 
 show_and_save()

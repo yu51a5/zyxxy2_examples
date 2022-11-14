@@ -95,7 +95,7 @@ my_default_animation_params = {'dpi'     : 70,
 my_default_images_folder = "images_videos"
 
 my_default_text_bubble_params = {'color' : 'black',
-                                 'backgroundcolor' : 'white',
+                                 'background_color' : 'white',
                                  'linewidth' : 0,
                                  'linecolor' : 'black',
                                  'fontsize' : 12/screen_zoom, 

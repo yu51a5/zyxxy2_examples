@@ -20,7 +20,7 @@ from yyyyy_utils import sin, cos, asin, acos, atan, is_the_same_point, my_defaul
 from scipy.optimize import fsolve
 from math import sqrt, ceil, floor
 
-yyyyy_line_shapes = ['a_segment', 'a_smile', 'a_coil', 'an_arc', 'a_zigzag', 'a_wave', 'a_power_curve']
+yyyyy_line_shapes = ['a_segment', 'a_smile', 'a_coil', 'an_arc', 'a_zigzag', 'a_wave', 'a_power_curve', 'a_squiggle_curve']
 
 ########################################################################
 
@@ -112,9 +112,9 @@ def _get_common_keys_for_shape(shapename, available_arguments=None):
 ########################################################################
 
 def get_type_given_shapename(shapename):
-  if shapename in yyyyy_line_shapes:
+  if (shapename in yyyyy_line_shapes) or shapename == 'a_broken_line':
     return 'line'
-  elif shapename in shape_names_params_dicts_definition.keys():
+  elif (shapename in shape_names_params_dicts_definition.keys()) or shapename == 'a_polygon':
     return 'patch'
   else:
     raise Exception(shapename, " is not a recognized shapename")
@@ -141,7 +141,9 @@ shape_names_params_dicts_definition = {
                             'a_zigzag' : {'width': 'half_min_size', 'height': 'half_min_size', 'angle_start': 'turn', 'nb_segments': 'vertices'},
                             'a_wave' : {'width': 'half_min_size', 'height': 'half_min_size', 'angle_start': 'turn', 'nb_waves': ['vertices', 2]},
                             'a_coil' : {'angle_start' : 'turn', 'nb_turns' : ['from_0_to_5', 3], 'speed_x' : 'from_0_to_5', 'speed_out' : ['from_0_to_5', 1.2]},
-                            'a_squiggle': {'angle_start' : ['turn', 0], 'angle_end' : ['double_turn', 24], 'speed_x' : ['from_0_to_5', 3], 'width' : ['half_width', 2], 'height' : 'half_height'}}
+                            'a_squiggle': {'angle_start' : ['turn', 0], 'angle_end' : ['double_turn', 24], 'speed_x' : ['from_0_to_5', 3], 'width' : ['half_width', 2], 'height' : 'half_height'},
+                            'a_squiggle_curve': {'angle_start' : ['turn', 0], 'angle_end' : ['double_turn', 24], 'speed_x' : ['from_0_to_5', 3], 'width' : ['half_width', 2], 'height' : 'half_height'},
+                            }
 
 ########################################################################
 
@@ -245,6 +247,9 @@ def build_a_squiggle(angle_start, angle_end, speed_x, width, height):
 
   contour = np.array([[sin(a * speed_x), cos(a)] for a in angles])  * [width/2, height/2]
   return contour
+
+def build_a_squiggle_curve(**kwargs):
+  return build_a_squiggle(**kwargs)
 
 # a circle ########################################################
 def build_a_circle(radius):
