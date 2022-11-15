@@ -534,6 +534,28 @@ class Shape:
   def shift_y_to(self, new_diamond_y):
     diamond_shift = new_diamond_y - self.diamond_coords[1]
     self.shift(shift=[0, diamond_shift])
+
+##################################################################
+  def shift_to_position(self, xy, position):
+
+    # now adjust the position if needed
+    bbox = self.get_bbox()
+    old_xy = [bbox.xmax, bbox.ymax]
+    
+    assert(position[0] in ['l', 'c', 'r'])
+    if position[0] == 'c':
+      old_xy[0] -= bbox.width/2
+    elif position[0] == 'l':
+      old_xy[0] -= bbox.width
+    
+    assert(position[1] in ['b', 'c', 't'])
+    if position[1] == 'c':
+      old_xy[1] -= bbox.height/2
+    elif position[1] == 'b':
+      old_xy[1] -= bbox.height
+
+    self.shift([xy[0] - old_xy[0], xy[1] - old_xy[1]])
+    
 ##################################################################
   def _move_by_matrix_around_diamond(self, matrix=None, diamond_override=None):
     

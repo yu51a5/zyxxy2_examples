@@ -14,6 +14,7 @@
 ##  GNU General Public License for more details.
 ########################################################################
 
+from matplotlib.transforms import Bbox
 from yyyyy_shape_style import _get_axes, get_default_text_bubble_params
 from yyyyy_utils import atan, calc_Pythagoras
 from yyyyy_shape_functions import draw_a_triangle
@@ -96,8 +97,37 @@ class WordBubble:
     self.make_visible(False)
 
   def get_bbox(self):
-    tbb_it = self.text_box.get_bbox_patch().get_bbox().transformed(self.text_box.axes.transData.inverted())#tbb.transformed(self.text_box.axes.transData.inverted())
+    rend = self.text_box.axes.figure.canvas.get_renderer()
+    tbb = self.text_box.get_window_extent(renderer=rend)
+    abb = self.text_box.axes.get_window_extent(renderer=rend)
+    a_xlim, a_ylim = self.text_box.axes.get_xlim(), self.text_box.axes.get_ylim()
+    relative_width = tbb.width/abb.width * (a_xlim[1] - a_xlim[0])
+    relative_height =  tbb.height/abb.height * (a_ylim[1] - a_ylim[0])
+
+    xy = self.text_box.get_position()
+    tbb_it = Bbox.from_extents(xy[0], xy[1], xy[0]+relative_width, xy[1]+relative_height)
+
     return tbb_it
+
+  def shift_to_position(self, xy, position):
+
+    # now adjust the position if needed
+    new_xy = [xy[0], xy[1]]
+    bbox = self.get_bbox()
+
+    assert(position[0] in ['l', 'c', 'r'])
+    if position[0] == 'c':
+      new_xy[0] -= bbox.width/2
+    elif position[0] == 'l':
+      new_xy[0] -= bbox.width
+    
+    assert(position[1] in ['b', 'c', 't'])
+    if position[1] == 'c':
+      new_xy[1] -= bbox.height/2
+    elif position[1] == 'b':
+      new_xy[1] -= bbox.height
+
+    self.text_box.set_position(new_xy)
 
   def get_text(self):
     return self.text_box.get_text()
