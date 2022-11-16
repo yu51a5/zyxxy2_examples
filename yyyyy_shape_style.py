@@ -84,7 +84,6 @@ def get_diamond_size(ax=None):
 
 ########################################################################
 
-
 def raise_Exception_if_not_processed(kwarg_keys, allowed_keys):
   not_processed = [
     arg_name for arg_name in kwarg_keys if arg_name not in allowed_keys
@@ -103,12 +102,10 @@ def _get_renderer(fig=None):
   rend = fig.canvas.get_renderer()
   return rend
 
-
 def _get_axes(ax):
   if ax is None:
     ax = plt.gca()
   return ax
-
 
 def get_canvas_width(ax=None):
   ax = _get_axes(ax=ax)
@@ -304,12 +301,20 @@ def set_polygon_style(something, attr_name, kwargs=None):
 
 
 def _set_default_style(what, **kwargs):
-  global default_color_etc_settings
-  raise_Exception_if_not_processed(
-    kwarg_keys=kwargs.keys(),
-    allowed_keys=default_color_etc_settings[what].keys())
-  for ua in kwargs.keys():
-    default_color_etc_settings[what][ua] = kwargs[ua]
+  if what == 'text':
+    global default_text_bubble_params
+    raise_Exception_if_not_processed(
+      kwarg_keys=kwargs.keys(),
+      allowed_keys=default_text_bubble_params.keys())
+    for ua in kwargs.keys():
+      default_text_bubble_params[ua] = kwargs[ua]
+  else:
+    global default_color_etc_settings
+    raise_Exception_if_not_processed(
+      kwarg_keys=kwargs.keys(),
+      allowed_keys=default_color_etc_settings[what].keys())
+    for ua in kwargs.keys():
+      default_color_etc_settings[what][ua] = kwargs[ua]
 
 
 def set_default_line_style(**kwargs):

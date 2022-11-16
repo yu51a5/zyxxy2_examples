@@ -35,7 +35,7 @@ shape_names_params_dicts_definition_plus.update({'a_polygon' : {}, 'a_broken_lin
 
 gap, text_height, shape_height = 1, 1.5, 5.5
 
-shape_positions_colors_params = { 1 : 
+shape_positions_colors_params = { 1 + gap/2: 
                             [['a_square', 'superBlue'], 
                              ['a_rectangle', 'superGold'], 
                              ['a_triangle', 'superOrange'],
@@ -43,7 +43,7 @@ shape_positions_colors_params = { 1 :
                              ['a_star', 'Purple', .6, ['orchid', .8, {'ends_qty' : 8, 'radius_1' : 3}]], 
                              ['a_regular_polygon', 'red', .9, ['orangered', .9, {'vertices_qty' : 8}]],
                              ['a_polygon', 'turquoise', 1.0, ['darkturquoise', 1.]]],  
-                                  10 : 
+                                  10 + gap/2: 
                             [['a_circle', 'superPink', .8],
                              ['an_ellipse', 'Burgundy'],                             
                              ['a_drop', 'BubblePink'], 
@@ -70,7 +70,7 @@ shape_positions_colors_params = { 1 :
                              ['a_broken_line', 'turquoise', 1., ['darkturquoise', 1.]]]
 }
 
-create_canvas_and_axes(canvas_width=70, canvas_height=36)
+create_canvas_and_axes(canvas_width=71, canvas_height=36+gap/2)
 draw_a_rectangle(bottom=18+1.5, height=get_canvas_height(), left=0, width=get_canvas_width(), color='black', layer_nb=-2)
 draw_a_rectangle(bottom=18, height=28-1-18-1.5, left=0, width=get_canvas_width()/2, color='white', layer_nb=-2)
 for i, text_ in enumerate(['patches', 'lines']):
@@ -87,6 +87,7 @@ set_default_linewidth(5)
 for text_y, shapes_infos in shape_positions_colors_params.items():
   layer_nb_bg = new_layer()
   layer_nb = new_layer()
+
   x_so_far = 0
   shape_y = text_y + text_height + 0.5 * shape_height
   for nb_shape, shapes_info in enumerate(shapes_infos):
@@ -96,7 +97,7 @@ for text_y, shapes_infos in shape_positions_colors_params.items():
     text_color = 'black' if text_y < 18 else 'white'
     bg_color = ('black' if nb_shape%2 else 0.2) if text_y > 18 else ('white' if nb_shape%2 else 0.8)
 
-    sb = draw_a_speech_bubble(text=shapename, x=x_so_far, y=text_y, color=text_color, background_color=bg_color, layer_nb=layer_nb)
+    sb = draw_a_speech_bubble(text=shapename, x=x_so_far, y=text_y, color=text_color, background_color=bg_color)
     long_params = shape_names_params_dicts_definition_plus[shapename]
 
     shape_params = {p_name : slider_range[p_slider_params][2] if isinstance(p_slider_params, str) else p_slider_params[1] 

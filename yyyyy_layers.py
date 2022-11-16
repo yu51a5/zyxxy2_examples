@@ -16,57 +16,58 @@
 
 from yyyyy_shape_style import set_default_layer_nb, get_top_layer_nb
 from yyyyy_shape_class import Shape
+from yyyyy_word_bubbles import WordBubble
 
 ########################################################################
 # adding new layers
 ########################################################################
 def new_layer():
   new_layer_nb = 1 + get_top_layer_nb()
-  for fa in ["line", "patch", "outline"]: 
+  for fa in ["line", "patch", "outline", "text"]: 
     set_default_layer_nb(what=fa, layer_nb=new_layer_nb)
   return new_layer_nb
 
 def new_layer_outline_behind():
   new_layer_nb = 1 + get_top_layer_nb()
   set_default_layer_nb(what='outline', layer_nb=new_layer_nb)
-  set_default_layer_nb(what='line', layer_nb=new_layer_nb+1)
-  set_default_layer_nb(what='patch', layer_nb=new_layer_nb+1)
+  for fa in ["line", "patch", "text"]: 
+    set_default_layer_nb(what=fa, layer_nb=new_layer_nb+1)
   return new_layer_nb+1, new_layer_nb
 
 ########################################################################
 # handling shapes per layers
 ########################################################################
 def shift_layers(shift, layer_nbs=[]):
-  _shapes = Shape._get_all_shapes_in_layers(layer_nbs)
+  _shapes = Shape._get_all_shapes_in_layers(layer_nbs) + WordBubble.get_all_in_layers(layer_nbs)
   for shape in _shapes:
     shape.shift(shift=shift)
 
 ########################################################################
 def turn_layers(turn, diamond, layer_nbs=[]):
-  _shapes = Shape._get_all_shapes_in_layers(layer_nbs)
+  _shapes = Shape._get_all_shapes_in_layers(layer_nbs) + WordBubble.get_all_in_layers(layer_nbs)
   for shape in _shapes:
     shape.turn(turn=turn, diamond_override=diamond)
 
 ########################################################################
 def stretch_layers(diamond, stretch, layer_nbs=[]):
-  _shapes = Shape._get_all_shapes_in_layers(layer_nbs)
+  _shapes = Shape._get_all_shapes_in_layers(layer_nbs) + WordBubble.get_all_in_layers(layer_nbs)
   for shape in _shapes:
     shape.stretch(diamond_override=diamond, stretch=stretch)
 
 ########################################################################
 def make_layers_visible(layer_nbs=[]):
-  _shapes = Shape._get_all_shapes_in_layers(layer_nbs)
+  _shapes = Shape._get_all_shapes_in_layers(layer_nbs) + WordBubble.get_all_in_layers(layer_nbs)
   for shape in _shapes:
     shape.make_visible()
 
 ########################################################################
 def make_layers_invisible(layer_nbs=[]):
-  _shapes = Shape._get_all_shapes_in_layers(layer_nbs)
+  _shapes = Shape._get_all_shapes_in_layers(layer_nbs) + WordBubble.get_all_in_layers(layer_nbs)
   for shape in _shapes:
     shape.make_invisible()
 
 ########################################################################
 def stretch_layers_with_direction(diamond, stretch_coeff, stretch_direction, layer_nbs=[]):
-  _shapes = Shape._get_all_shapes_in_layers(layer_nbs)
+  _shapes = Shape._get_all_shapes_in_layers(layer_nbs) + WordBubble.get_all_in_layers(layer_nbs)
   for shape in _shapes:
     shape.stretch_with_direction(diamond_override=diamond, stretch_coeff=stretch_coeff, stretch_direction=stretch_direction)

@@ -14,6 +14,7 @@
 ##  GNU General Public License for more details.
 ########################################################################
 
+import numpy as np
 from matplotlib.transforms import Bbox
 from yyyyy_shape_style import _get_axes, get_default_text_bubble_params
 from yyyyy_utils import atan, calc_Pythagoras
@@ -27,10 +28,19 @@ from yyyyy_colors import find_color_code
 class WordBubble:
 
   text_boxes = []
+  all_objects = []
 
   ################################################################# 
   def get_all():
     return WordBubble.text_boxes
+
+  ########################################################################
+  def get_all_in_layers(layer_nbs=[], ax=None):
+    ax = _get_axes(ax=ax)
+    _tbs_in_layers = [as_ for as_ in WordBubble.all_objects if as_.get_axes() == ax]
+    if len(layer_nbs) != 0:
+      _tbs_in_layers = [sh for sh in _tbs_in_layers if sh.get_layer_nb() in layer_nbs]
+    return _tbs_in_layers
 
   ################################################################# 
   def _create_params_subdictionary(param_names_dictionary, kwargs):
@@ -49,6 +59,8 @@ class WordBubble:
 
   ################################################################## 
   def __init__(self, text, x, y, ax=None, start=None, connection=None, **kwargs):
+
+    WordBubble.all_objects.append(self)
 
     ax = _get_axes(ax=ax)
       
@@ -89,6 +101,14 @@ class WordBubble:
       self.set_text(text) # to adjust the size of the connector
     
     WordBubble.text_boxes.append(self)
+
+  def get_axes(self):
+    result = self.text_box.axes
+    return result
+
+  def get_layer_nb(self):
+    result = self.text_box.get_zorder()
+    return result
 
   def _get_what_to_move(self):
     result = [self.text_box]
@@ -134,6 +154,9 @@ class WordBubble:
       new_xy[1] -= bbox.height
 
     self.text_box.set_position(new_xy)
+
+  def shift(self, shift):
+    self.text_box.set_position(np.array(shift) + self.text_box.get_position())
 
   def get_text(self):
     return self.text_box.get_text()
