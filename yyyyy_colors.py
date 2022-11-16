@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib.colors import is_color_like, to_rgb
 from MY_yyyyy_SETTINGS_general import my_color_palette
-from yyyyy_utils import find_LCM, get_sign, is_the_same_point, equal_or_almost
+from yyyyy_utils import find_LCM, get_sign, is_the_same_point, is_a_number
 from math import floor
 
 ##################################################################
@@ -13,7 +13,8 @@ def find_color_code(color_name):
     return 'none'
   if isinstance(color_name, str) and color_name in my_color_palette:
     return np.array(to_rgb(my_color_palette[color_name]))
-
+  if is_a_number(color_name):
+    return find_color_code([color_name, color_name, color_name])
   if not is_color_like(color_name):
     raise Exception(color_name, "is not a valid color!")
   return np.array(to_rgb(color_name))

@@ -18,6 +18,7 @@ from matplotlib.transforms import Bbox
 from yyyyy_shape_style import _get_axes, get_default_text_bubble_params
 from yyyyy_utils import atan, calc_Pythagoras
 from yyyyy_shape_functions import draw_a_triangle
+from yyyyy_colors import find_color_code
 
 ##################################################################
 ## SHAPE                                                        ## 
@@ -60,6 +61,11 @@ class WordBubble:
 
     _triangle = draw_a_triangle(tip=[0, 0], height=0, width=0, turn=0, color=props['facecolor'], outline_linewidth=props['linewidth'], outline_color=props['edgecolor'], layer_nb=props['zorder']-1, outline_layer_nb=props['zorder']-1)
     _triangle.set_visible(False)
+
+    for dict_ in [props, text_dict]:
+      for k in dict_.keys():
+        if 'color' in k:
+          dict_[k] = find_color_code(dict_[k])
 
     # place a text box in upper left in axes coords
     self.text_box =  ax.text(s=text, x=x, y=y, transform=ax.transData, **text_dict, bbox=props)
