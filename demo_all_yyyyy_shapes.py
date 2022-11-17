@@ -34,8 +34,9 @@ shape_names_params_dicts_definition_plus = {k : v for k, v in shape_names_params
 shape_names_params_dicts_definition_plus.update({'a_polygon' : {}, 'a_broken_line' : {}})
 
 gap, text_height, shape_height = 1, 1.5, 5.5
+extention = 5
 
-shape_positions_colors_params = { 1 + gap/2: 
+shape_positions_colors_params = { 1 + gap/2 + extention: 
                             [['a_square', 'superBlue'], 
                              ['a_rectangle', 'superGold'], 
                              ['a_triangle', 'superOrange'],
@@ -43,7 +44,7 @@ shape_positions_colors_params = { 1 + gap/2:
                              ['a_star', 'Purple', .6, ['orchid', .8, {'ends_qty' : 8, 'radius_1' : 3}]], 
                              ['a_regular_polygon', 'red', .9, ['orangered', .9, {'vertices_qty' : 8}]],
                              ['a_polygon', 'turquoise', 1.0, ['darkturquoise', 1.]]],  
-                                  10 + gap/2: 
+                                  10 + gap/2 + extention: 
                             [['a_circle', 'superPink', .8],
                              ['an_ellipse', 'Burgundy'],                             
                              ['a_drop', 'BubblePink'], 
@@ -55,7 +56,7 @@ shape_positions_colors_params = { 1 + gap/2:
                              ['a_crescent', 'dimgray', 1., 
                                           ['darkgray', 1.35, {'depth_2' : -2.5, 'turn' : -3}]],
                              ['a_squiggle', 'orchid', .8, ['darkorchid', .8, {'speed_x' : 5}]]],
-                                  28 : 
+                                  28 + extention: 
                             [['a_segment', 'yellow'],
                              ['a_zigzag', 'LightBlue'],
                              ['a_power_curve', 'red', 0.7],
@@ -70,17 +71,35 @@ shape_positions_colors_params = { 1 + gap/2:
                              ['a_broken_line', 'turquoise', 1., ['darkturquoise', 1.]]]
 }
 
-create_canvas_and_axes(canvas_width=71, canvas_height=36+gap/2)
-draw_a_rectangle(bottom=18+1.5, height=get_canvas_height(), left=0, width=get_canvas_width(), color='black', layer_nb=-2)
-draw_a_rectangle(bottom=18, height=28-1-18-1.5, left=0, width=get_canvas_width()/2, color='white', layer_nb=-2)
-for i, text_ in enumerate(['patches', 'lines']):
-  sb = draw_a_speech_bubble(text=text_, x=get_canvas_width()/2*i, y=18, fontsize=30,
-                       color='black' if i == 0 else 'white', 
-                       background_color='black' if i == 1 else 'white')
-  sb.shift_to_position((get_canvas_width() * (.25 + .5 * i), 18 + 4.5), 'cc')
-scale_default_fontsize(.36)
-set_default_linewidth(5)
+create_canvas_and_axes(canvas_width=71, canvas_height=36+gap/2+extention)
 
+draw_a_rectangle(bottom=19.5+extention, height=get_canvas_height(), left=0, width=get_canvas_width(), color='black', layer_nb=-2)
+draw_a_rectangle(bottom=18  +extention, height=28-1-18-1.5, left=0, width=get_canvas_width()/2, color='white', layer_nb=-2)
+
+set_default_linewidth(5)
+title_bboxes = [None, None]
+c1, c2 = 2, 1
+for i, text_ in enumerate(['patches', 'lines']):
+  text_color = 'black' if i == 0 else 'white'
+  title = draw_a_speech_bubble(text=text_, fontsize=30,
+                       x=get_canvas_width() * (.25 + .5 * i), y=22.5 + extention, position='cc',
+                       color=text_color, background_color='black' if i == 1 else 'white')
+  title_bboxes[i] = title.get_bbox()
+  if i == 0:
+    y1, y2 = title_bboxes[i].ymax + gap/2, title_bboxes[i].ymin-gap/2
+  else:
+    y2, y1 = title_bboxes[i].ymax+gap/2, title_bboxes[i].ymin-gap/2
+  draw_a_broken_line([[title_bboxes[i].xmin-gap*(c1+c2), y2], [title_bboxes[i].xmin-gap*c1, y1], 
+                      [title_bboxes[i].xmax+gap*c1, y1], [title_bboxes[i].xmax+gap*(c1+c2), y2]], color=text_color)
+  draw_a_broken_line([[title_bboxes[i].xmin-gap*(c1-c2), y2], [title_bboxes[i].xmin-gap*c1, y1], 
+                      [title_bboxes[i].xmax+gap*c1, y1], [title_bboxes[i].xmax+gap*(c1-c2), y2]], color=text_color)
+scale_default_fontsize(.36)
+
+
+draw_a_rectangle(bottom=0, height=extention-gap, left=0, width=get_canvas_width(), color='plum')
+draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parametes work!', 
+                          x=get_canvas_width()/2, y=(extention-gap)/2, position='cc', 
+                          fontsize=15, background_color='plum')
 #######################################################
 # Now let's draw the shapes!                         ##
 

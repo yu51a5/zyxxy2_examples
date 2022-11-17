@@ -179,6 +179,8 @@ class WordBubble:
     else:
       raise Exception("not implemented")
 
-def draw_a_speech_bubble(text, x, y, **kwargs):
+def draw_a_speech_bubble(text, x, y, position=None, **kwargs):
   wb = WordBubble(text, x, y, **kwargs)
+  if position is not None:
+    wb.shift_to_position(xy=[x, y], position=position)
   return wb
