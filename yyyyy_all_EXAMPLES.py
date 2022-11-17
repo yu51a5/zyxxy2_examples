@@ -157,8 +157,8 @@ def example_penguins():
   # an eye
   draw_a_circle(center_x=263, center_y=85, radius=3, color=None, outline_color='white', outline_linewidth=2)
   set_default_text_style(linewidth=5, fontsize=20, triangle_width=8)
-  draw_a_speech_bubble(text="Where is fish?", x=180, y=120, start=[240, 85], background_color='white', name='text_right', position='rb')
-  draw_a_speech_bubble(text="I don't know...",x=140, y=120, start=[ 82, 85], background_color='white', name='text_left', position='lb')
+  draw_a_speech_bubble(text="Where is fish?", x=180, y=120, start=[240, 85], background_color='white', name='text_right', position='lt')
+  draw_a_speech_bubble(text="I don't know...",x=140, y=120, start=[ 82, 85], background_color='white', name='text_left', position='rt')
 
   show_and_save()
 

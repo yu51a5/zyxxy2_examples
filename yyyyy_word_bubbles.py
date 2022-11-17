@@ -144,22 +144,18 @@ class WordBubble:
     assert(position[0] in ['l', 'c', 'r'])
     if position[0] == 'c':
       new_xy[0] -= bbox.width/2
-    elif position[0] == 'l':
+    elif position[0] == 'r':
       new_xy[0] -= bbox.width
     
     assert(position[1] in ['b', 'c', 't'])
     if position[1] == 'c':
       new_xy[1] -= bbox.height/2
-    elif position[1] == 'b':
+    elif position[1] == 't':
       new_xy[1] -= bbox.height
 
     self.text_box.set_position(new_xy)
-    bb = self.get_bbox()
-    print(bb.xmin, bb.ymin, bb.xmax, bb.ymax)
     self.set_text(text=self.get_text())
-    bb = self.get_bbox()
-    print(bb.xmin, bb.ymin, bb.xmax, bb.ymax)
-    
+
   def shift(self, shift):
     self.text_box.set_position(np.array(shift) + self.text_box.get_position())
 
