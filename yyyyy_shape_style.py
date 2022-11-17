@@ -332,6 +332,9 @@ def set_default_outline_style(**kwargs):
 def set_default_diamond_style(**kwargs):
   _set_default_style(what='diamond', **kwargs)
 
+def set_default_text_style(**kwargs):
+  _set_default_style(what='text', **kwargs)
+
 
 def set_default_patch_color(color):
   set_default_patch_style(color=color)

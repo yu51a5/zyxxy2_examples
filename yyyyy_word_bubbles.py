@@ -80,10 +80,11 @@ class WordBubble:
           dict_[k] = find_color_code(dict_[k])
 
     # place a text box in upper left in axes coords
-    self.text_box =  ax.text(s=text, x=x, y=y, transform=ax.transData, **text_dict, bbox=props)
+    self.text_box = ax.text(s=text, x=x, y=y, transform=ax.transData, **text_dict, bbox=props)
     WordBubble.text_boxes.append(self.text_box)
 
-    assert (start is None) == (connection is None)
+    if start is not None:
+      connection = 'triangle'
     self.connection = connection
     self.start = start
     if start is None:
@@ -91,10 +92,9 @@ class WordBubble:
     else:
       assert connection in ['bubble', 'triangle']
       if  self.connection == 'triangle':
-        assert 'triangle_width' in kwargs
         self.connector = _triangle
         self.connector.shift_to(start)
-        self.connector.width = kwargs['triangle_width']
+        self.connector.width = kwargs['triangle_width'] if 'triangle_width' in kwargs else get_default_text_bubble_params('triangle_width')
         self.connector.set_visible(True)
       else:
         raise Exception("not implemented")
@@ -154,7 +154,12 @@ class WordBubble:
       new_xy[1] -= bbox.height
 
     self.text_box.set_position(new_xy)
-
+    bb = self.get_bbox()
+    print(bb.xmin, bb.ymin, bb.xmax, bb.ymax)
+    self.set_text(text=self.get_text())
+    bb = self.get_bbox()
+    print(bb.xmin, bb.ymin, bb.xmax, bb.ymax)
+    
   def shift(self, shift):
     self.text_box.set_position(np.array(shift) + self.text_box.get_position())
 

@@ -34,7 +34,14 @@ shape_names_params_dicts_definition_plus = {k : v for k, v in shape_names_params
 shape_names_params_dicts_definition_plus.update({'a_polygon' : {}, 'a_broken_line' : {}})
 
 gap, text_height, shape_height = 1, 1.5, 5.5
-extention = 5
+extention, extention2 = 4.5, 10
+transf_y = 36+gap/2+extention
+
+transformations_params = {'shift' : ['a_star', 'SeaWave', (3, 1), 0.6], 
+                          'turn' : ['a_square', 'BrightGreen', 2], 
+                          'stretch' : ['a_rhombus', 'superBlue', 1.5], 
+                          'stretch_x' : ['a_drop', 'aquamarine', 1.2], 
+                          'stretch_y' : ['a_crescent', 'turquoise', 1.2]}
 
 shape_positions_colors_params = { 1 + gap/2 + extention: 
                             [['a_square', 'superBlue'], 
@@ -71,7 +78,7 @@ shape_positions_colors_params = { 1 + gap/2 + extention:
                              ['a_broken_line', 'turquoise', 1., ['darkturquoise', 1.]]]
 }
 
-create_canvas_and_axes(canvas_width=71, canvas_height=36+gap/2+extention)
+create_canvas_and_axes(canvas_width=71, canvas_height=36+gap/2+extention+extention2)
 
 draw_a_rectangle(bottom=19.5+extention, height=get_canvas_height(), left=0, width=get_canvas_width(), color='black', layer_nb=-2)
 draw_a_rectangle(bottom=18  +extention, height=28-1-18-1.5, left=0, width=get_canvas_width()/2, color='white', layer_nb=-2)
@@ -96,9 +103,9 @@ for i, text_ in enumerate(['patches', 'lines']):
 scale_default_fontsize(.36)
 
 
-draw_a_rectangle(bottom=0, height=extention-gap, left=0, width=get_canvas_width(), color='plum')
+draw_a_rectangle(bottom=0, height=extention-gap/2, left=0, width=get_canvas_width(), color='plum')
 draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parametes work!', 
-                          x=get_canvas_width()/2, y=(extention-gap)/2, position='cc', 
+                          x=get_canvas_width()/2, y=(extention-gap/2)/2, position='cc', 
                           fontsize=15, background_color='plum')
 #######################################################
 # Now let's draw the shapes!                         ##

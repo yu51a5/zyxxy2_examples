@@ -108,4 +108,6 @@ my_default_text_bubble_params = {'color' : 'black',
                                  'fontfamily' : 'monospace', 
                                  'color' : 'black',
                                  'opacity' : 1, 
-                                 'layer_nb' : 1}
+                                 'layer_nb' : 1,
+                                 'triangle_width' : 5}
+                                 
