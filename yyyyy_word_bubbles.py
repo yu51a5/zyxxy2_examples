@@ -16,16 +16,20 @@
 
 import numpy as np
 from matplotlib.transforms import Bbox
-from yyyyy_shape_style import _get_axes, get_default_text_bubble_params
+from yyyyy_shape_style import _get_axes, get_default_text_bubble_params, get_linewidth_factor
 from yyyyy_utils import atan, calc_Pythagoras
 from yyyyy_shape_functions import draw_a_triangle
 from yyyyy_colors import find_color_code
+from yyyyy_bbox import ObjPosition
 
 ##################################################################
-## SHAPE                                                        ## 
+## TEXT                                                         ## 
 ##################################################################
 
 class WordBubble:
+
+  for s in ['left', 'right', 'bottom', 'top', 'center_x', 'center_y']:
+    locals()[s] = ObjPosition(name=s)
 
   text_boxes = []
   all_objects = []
@@ -71,7 +75,11 @@ class WordBubble:
     text_dict, used_argnames2 = WordBubble._create_params_subdictionary(['fontsize', 'verticalalignment', 'horizontalalignment', 'multialignment', 'wrap', ['zorder', 'layer_nb'], 'fontfamily', 'color'], kwargs)
     used_argnames += used_argnames2
 
-    _triangle = draw_a_triangle(tip=[0, 0], height=0, width=0, turn=0, color=props['facecolor'], outline_linewidth=props['linewidth'], outline_color=props['edgecolor'], layer_nb=props['zorder']-1, outline_layer_nb=props['zorder']-1)
+    _triangle = draw_a_triangle(tip=[0, 0], height=0, width=0, turn=0, color=props['facecolor'], 
+                                outline_linewidth=props['linewidth']*get_linewidth_factor(), 
+                                outline_color=props['edgecolor'],
+                                layer_nb=props['zorder']+1/4, outline_layer_nb=props['zorder'])
+    
     _triangle.set_visible(False)
 
     for dict_ in [props, text_dict]:
@@ -80,8 +88,15 @@ class WordBubble:
           dict_[k] = find_color_code(dict_[k])
 
     # place a text box in upper left in axes coords
-    self.text_box = ax.text(s=text, x=x, y=y, transform=ax.transData, **text_dict, bbox=props)
-    WordBubble.text_boxes.append(self.text_box)
+    self.text_boxes = [ax.text(s=text, x=x, y=y, transform=ax.transData, **text_dict, bbox=props)]
+
+    props['zorder'] += 1/2
+    text_dict['zorder'] += 1/2
+    props['edgecolor'] = 'none'
+    props['facecolor'] = 'none'
+
+    self.text_boxes.append(ax.text(s=text, x=x, y=y, transform=ax.transData, **text_dict, bbox=props))
+    WordBubble.text_boxes += self.text_boxes
 
     if start is not None:
       connection = 'triangle'
@@ -103,19 +118,20 @@ class WordBubble:
     WordBubble.text_boxes.append(self)
 
   def get_axes(self):
-    result = self.text_box.axes
+    result = self.text_boxes[0].axes
     return result
 
   def get_layer_nb(self):
-    result = self.text_box.get_zorder()
+    result = self.text_boxes[0].get_zorder()
     return result
 
   def _get_what_to_move(self):
-    result = [self.text_box]
+    result = self.text_boxes
     return result
 
   def make_visible(self, val=True):
-    self.text_box.set_visible(val)
+    self.text_boxes[0].set_visible(val)
+    self.text_boxes[1].set_visible(val)
     if self.connector is not None:
       self.connector.set_visible(val)
 
@@ -123,14 +139,14 @@ class WordBubble:
     self.make_visible(False)
 
   def get_bbox(self):
-    rend = self.text_box.axes.figure.canvas.get_renderer()
-    tbb = self.text_box.get_window_extent(renderer=rend)
-    abb = self.text_box.axes.get_window_extent(renderer=rend)
-    a_xlim, a_ylim = self.text_box.axes.get_xlim(), self.text_box.axes.get_ylim()
+    rend = self.get_axes().figure.canvas.get_renderer()
+    tbb = self.text_boxes[0].get_window_extent(renderer=rend)
+    abb = self.get_axes().get_window_extent(renderer=rend)
+    a_xlim, a_ylim = self.get_axes().get_xlim(), self.get_axes().get_ylim()
     relative_width = tbb.width/abb.width * (a_xlim[1] - a_xlim[0])
     relative_height =  tbb.height/abb.height * (a_ylim[1] - a_ylim[0])
 
-    xy = self.text_box.get_position()
+    xy = self.text_boxes[0].get_position()
     tbb_it = Bbox.from_extents(xy[0], xy[1], xy[0]+relative_width, xy[1]+relative_height)
 
     return tbb_it
@@ -153,17 +169,20 @@ class WordBubble:
     elif position[1] == 't':
       new_xy[1] -= bbox.height
 
-    self.text_box.set_position(new_xy)
+    for tb in self.text_boxes:
+      tb.set_position(new_xy)
     self.set_text(text=self.get_text())
 
   def shift(self, shift):
-    self.text_box.set_position(np.array(shift) + self.text_box.get_position())
+    for tb in self.text_boxes:
+      tb.set_position(np.array(shift) + tb.get_position())
 
   def get_text(self):
-    return self.text_box.get_text()
+    return self.text_boxes[0].get_text()
 
   def set_text(self, text, mid_override=None):
-    self.text_box.set_text(text)  
+    self.text_boxes[0].set_text(text) 
+    self.text_boxes[1].set_text(text)  
     tbb_it = self.get_bbox()
     mid = mid_override if mid_override is not None else [0.5*(tbb_it.x1+tbb_it.x0), 0.5*(tbb_it.y1+tbb_it.y0)]
 

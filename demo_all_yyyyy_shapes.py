@@ -15,7 +15,7 @@
 ########################################################################
 
 from yyyyy_canvas import create_canvas_and_axes, show_and_save
-from yyyyy_shape_functions import draw_a_rectangle, draw_a_broken_line, draw_a_polygon
+from yyyyy_shape_functions import draw_a_rectangle, draw_a_broken_line, draw_a_polygon, clone_a_shape
 from yyyyy_word_bubbles import draw_a_speech_bubble
 from yyyyy_shape_style import scale_default_fontsize, get_canvas_height, get_canvas_width, set_default_linewidth
 from yyyyy_coordinates import shape_names_params_dicts_definition, get_type_given_shapename, build_a_smile, build_a_zigzag
@@ -34,14 +34,10 @@ shape_names_params_dicts_definition_plus = {k : v for k, v in shape_names_params
 shape_names_params_dicts_definition_plus.update({'a_polygon' : {}, 'a_broken_line' : {}})
 
 gap, text_height, shape_height = 1, 1.5, 5.5
-extention, extention2 = 4.5, 10
+extention, extention2 = 4.5, 12
 transf_y = 36+gap/2+extention
-
-transformations_params = {'shift' : ['a_star', 'SeaWave', (3, 1), 0.6], 
-                          'turn' : ['a_square', 'BrightGreen', 2], 
-                          'stretch' : ['a_rhombus', 'superBlue', 1.5], 
-                          'stretch_x' : ['a_drop', 'aquamarine', 1.2], 
-                          'stretch_y' : ['a_crescent', 'turquoise', 1.2]}
+canvas_height = 36+gap/2+extention+extention2
+create_canvas_and_axes(canvas_width=71, canvas_height=canvas_height)
 
 shape_positions_colors_params = { 1 + gap/2 + extention: 
                             [['a_square', 'superBlue'], 
@@ -75,13 +71,20 @@ shape_positions_colors_params = { 1 + gap/2 + extention:
                              ['a_squiggle_curve', 'orchid', .7, 
                               ['darkorchid', .7, {'speed_x' : 1.5}],
                               ['Hyacinth', .7, {'speed_x' : 5/6, 'angle_end':160}]],
-                             ['a_broken_line', 'turquoise', 1., ['darkturquoise', 1.]]]
+                             ['a_broken_line', 'turquoise', 1., ['darkturquoise', 1.]]],
+                                  canvas_height - (gap + text_height + shape_height) : 
+
+                              [['a_star', 'superBlue', 'shift', (3, .5), 0.5], 
+                               ['a_square', 'superBlue', 'turn', 2], 
+                               ['a_rhombus', 'superBlue', 'stretch', 1.8], 
+                               ['a_drop', 'aquamarine', 'stretch_x', 1.5], 
+                               ['a_crescent', 'turquoise', 'stretch_y', 1.5]]
 }
 
-create_canvas_and_axes(canvas_width=71, canvas_height=36+gap/2+extention+extention2)
-
 draw_a_rectangle(bottom=19.5+extention, height=get_canvas_height(), left=0, width=get_canvas_width(), color='black', layer_nb=-2)
-draw_a_rectangle(bottom=18  +extention, height=28-1-18-1.5, left=0, width=get_canvas_width()/2, color='white', layer_nb=-2)
+draw_a_rectangle(top=2 + 28, height=get_canvas_height(), left=0, width=get_canvas_width()/2, color='white', layer_nb=-2)
+draw_a_rectangle(height= gap + text_height + shape_height + 2, top=get_canvas_height(), 
+                 left=0, width=get_canvas_width(), color='plum', layer_nb=-2)
 
 set_default_linewidth(5)
 title_bboxes = [None, None]
@@ -104,7 +107,7 @@ scale_default_fontsize(.36)
 
 
 draw_a_rectangle(bottom=0, height=extention-gap/2, left=0, width=get_canvas_width(), color='plum')
-draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parametes work!', 
+draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parameters work!', 
                           x=get_canvas_width()/2, y=(extention-gap/2)/2, position='cc', 
                           fontsize=15, background_color='plum')
 #######################################################
@@ -114,20 +117,20 @@ for text_y, shapes_infos in shape_positions_colors_params.items():
   layer_nb_bg = new_layer()
   layer_nb = new_layer()
 
-  x_so_far = 0
+  x_so_far = gap
   shape_y = text_y + text_height + 0.5 * shape_height
   for nb_shape, shapes_info in enumerate(shapes_infos):
-    x_so_far += gap
     shapename = shapes_info[0]
 
-    text_color = 'black' if text_y < 18 else 'white'
-    bg_color = ('black' if nb_shape%2 else 0.2) if text_y > 18 else ('white' if nb_shape%2 else 0.8)
-
-    sb = draw_a_speech_bubble(text=shapename, x=x_so_far, y=text_y, color=text_color, background_color=bg_color)
+    text_color = 'white' if 40 > text_y > 18 else 'black'
+    
+    sb = draw_a_speech_bubble(text=shapename if 40 > text_y else shapes_info[2], 
+                              x=x_so_far, y=text_y, color=text_color, background_color='none')
     long_params = shape_names_params_dicts_definition_plus[shapename]
 
-    shape_params = {p_name : slider_range[p_slider_params][2] if isinstance(p_slider_params, str) else p_slider_params[1] 
-                                                                        for p_name, p_slider_params in long_params.items()}
+    shape_params = {p_name : slider_range[p_slider_params][2] 
+                               if isinstance(p_slider_params, str) else p_slider_params[1] 
+                                          for p_name, p_slider_params in long_params.items()}
 
     func = draw_a_polygon if get_type_given_shapename(shapename) == 'patch' else draw_a_broken_line
     if len(shapes_info) >= 3:
@@ -138,36 +141,51 @@ for text_y, shapes_infos in shape_positions_colors_params.items():
     shs = [func(diamond_x=0, diamond_y=0, color=shapes_info[1], **shape_params,
               contour=a_curve if shapename in ('a_polygon', 'a_broken_line') else shapename)]
 
-    if len(shapes_info) >= 3:
-      zoom_or_params = shapes_info[2]
+    zoom_factor = 1.
+    if (len(shapes_info) >= 3 and 40 > text_y) or (len(shapes_info) == 5 and 40 < text_y):
+      zoom_or_params = shapes_info[2 if 40 > text_y else -1]
       if not isinstance(zoom_or_params, dict):
-        shs[-1].stretch(zoom_or_params)
+        zoom_factor = zoom_or_params
+    shs[0].stretch(zoom_factor)
+    shs[0].shift_to_position(xy=[x_so_far, shape_y], position='lc')
 
-    shs[-1].shift_to_position(xy=[x_so_far, shape_y], position='lc')
-    x_so_far += shs[-1].get_bbox().width
-
-    for sh_ in shapes_info[3:]:
-      x_so_far += gap
-      if len(sh_) > 2:
-        shape_params.update(sh_[2])
-      shs.append(func(diamond_x=0, diamond_y=0, color=sh_[0], **shape_params,
-                      contour=a_random_curve if shapename in ('a_polygon', 'a_broken_line') else shapename))
-      shs[-1].stretch(sh_[1])
-      shs[-1].shift_to_position(xy=[x_so_far, shape_y], position='lc')
+    if 40 > text_y:
       x_so_far += shs[-1].get_bbox().width
-    
-    center_shapes = (shs[0].get_bbox().xmin + shs[-1].get_bbox().xmax) / 2
-    center_text = (sb.get_bbox().xmin + sb.get_bbox().xmax) / 2
+      for sh_ in shapes_info[3:]:
+        x_so_far += gap
+        if len(sh_) > 2:
+          shape_params.update(sh_[2])
+        shs.append(func(diamond_x=0, diamond_y=0, color=sh_[0], **shape_params,
+                        contour=a_random_curve if shapename in ('a_polygon', 'a_broken_line') else shapename))
+        shs[-1].stretch(sh_[1])
+        shs[-1].shift_to_position(xy=[x_so_far, shape_y], position='lc')
+        x_so_far += shs[-1].get_bbox().width
+       
+    else:
+      shs[0].shift_to_position(xy=[x_so_far, shape_y], position='lc')
+      shs.append(clone_a_shape(shs[0]))
+      an_attr = getattr(shs[0], shapes_info[2])
+      an_attr(shapes_info[3])
+
+      for sh in shs:
+        sh.left += x_so_far - min([sh2.left for sh2 in shs])
+      shs[0].color = 'Purple'
+      shs[0].opacity = .5
+      shs[1].color = 'superPink'
+
+    center_shapes = (min([sh.left for sh in shs]) + max([sh.right for sh in shs])) / 2
+    center_text = sb.center_x
     if center_shapes > center_text:
-      sb.shift_to_position(xy=[center_shapes, text_y], position='ct')
+      sb.shift_to_position(xy=[center_shapes, text_y], position='cb')
     else:
       for sh_ in shs:
         sh_.shift_x(center_text - center_shapes)
-      x_so_far = sb.get_bbox().xmax
-
-    left, right = min(shs[0].get_bbox().xmin, sb.get_bbox().xmin), max(shs[-1].get_bbox().xmax, sb.get_bbox().xmax)
+    
+    left, right = min([sh.left for sh in shs + [sb]]), max([sh.right for sh in shs + [sb]])
     draw_a_rectangle(left=left-gap/2, width=right-left+gap, bottom=text_y-gap/2, height=text_height+shape_height+gap,
-                     outline_color=text_color, layer_nb=layer_nb_bg, color=bg_color) 
+                     outline_color=text_color, layer_nb=layer_nb_bg, color='none')
+    x_so_far = right+gap
+
   shift_layers(shift=[get_canvas_width() / 2 - (x_so_far + gap) / 2, 0], layer_nbs=[layer_nb_bg, layer_nb])
 
 show_and_save()

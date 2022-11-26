@@ -257,13 +257,15 @@ def get_polygon_style(attr_name, style_name, parent, attr_override=None):
 
 ########################################################################
 
+def get_linewidth_factor():
+  return plt.gcf().dpi / 100 / screen_zoom
 
 def set_polygon_style(something, attr_name, kwargs=None):
 
   if kwargs is None or (not kwargs):
     kwargs = default_color_etc_settings[attr_name]
 
-  linewidth_factor = plt.gcf().dpi / 100 / screen_zoom
+  linewidth_factor = get_linewidth_factor()
 
   if OUTLINES_color is not None:
     something.set_fc('none')

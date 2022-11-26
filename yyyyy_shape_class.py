@@ -16,12 +16,14 @@
 
 import copy
 import numpy as np
+
 from matplotlib.pyplot import Polygon, gca
 from matplotlib.transforms import Bbox
 import yyyyy_coordinates
 from yyyyy_utils import is_the_same_contour, move_by_matrix, get_rotation_matrix, sin, cos, is_a_number
 from yyyyy_shape_style import set_polygon_style, get_diamond_size, format_arg_dict, line_arg_types, \
                               raise_Exception_if_not_processed, patch_arg_types, get_polygon_style, get_trace_color
+from yyyyy_bbox import ObjPosition
 
 ########################################################################################
 class ShapeFormAttribute:
@@ -81,15 +83,32 @@ class Shape:
   for k in yyyyy_coordinates._get_all_param_names():
     locals()[k] = ShapeFormAttribute(name=k)
 
+  for s in ['left', 'right', 'bottom', 'top', 'center_x', 'center_y']:
+    locals()[s] = ObjPosition(name=s)
+
 ##################################################################
   for prefix in [None, 'outline']:
-    for k in line_arg_types:
+    for k in line_arg_types + [patch_arg_types[-1]]:
       if k == 'ending_style' and prefix == 'outline':
         continue
       full_name = k if prefix is None else prefix + '_' + k
       locals()[full_name] = ShapeStyleAttribute(name=k, prefix=prefix)
 
   all_shapes = []
+
+  
+
+##################################################################
+
+  # def __getattr__(self, attrName: str) -> Any:
+  #   print(self.)
+  #   print(self.patch.__dict__)
+  #   print(self.__dict__)
+  #   if attrName not in self.__dict__:
+  #     value = self.fetchAttr(attrName)    # computes the value
+  #     self.__dict__[attrName] = value
+  #   return self.__dict__[attrName]
+
 
 ########################################################################
   def get_shape(shape_nb):
@@ -152,6 +171,7 @@ class Shape:
         else:
           result = Polygon(xy=dummy_xy, closed=init_patch.get_closed())
           result.update_from(other=init_patch)
+          result.set_zorder(init_patch.get_zorder())
           result.set_xy(np.copy(init_patch.get_xy()))
           init_patch.axes.add_patch(result)
 
