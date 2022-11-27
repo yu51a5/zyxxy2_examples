@@ -34,12 +34,13 @@ shape_names_params_dicts_definition_plus = {k : v for k, v in shape_names_params
 shape_names_params_dicts_definition_plus.update({'a_polygon' : {}, 'a_broken_line' : {}})
 
 gap, text_height, shape_height = 1, 1.5, 5.5
-extention, extention2 = 4.5, 12
-transf_y = 36+gap/2+extention
-canvas_height = 36+gap/2+extention+extention2
-create_canvas_and_axes(canvas_width=71, canvas_height=canvas_height)
+create_canvas_and_axes(canvas_width=71, canvas_height=52)
 
-shape_positions_colors_params = { 1 + gap/2 + extention: 
+sb = draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parameters work!', 
+                          x=get_canvas_width()/2, y=gap, position='cb', 
+                          fontsize=15, background_color='plum')
+
+shape_positions_colors_params = [ 
                             [['a_square', 'superBlue'], 
                              ['a_rectangle', 'superGold'], 
                              ['a_triangle', 'superOrange'],
@@ -47,7 +48,7 @@ shape_positions_colors_params = { 1 + gap/2 + extention:
                              ['a_star', 'Purple', .6, ['orchid', .8, {'ends_qty' : 8, 'radius_1' : 3}]], 
                              ['a_regular_polygon', 'red', .9, ['orangered', .9, {'vertices_qty' : 8}]],
                              ['a_polygon', 'turquoise', 1.0, ['darkturquoise', 1.]]],  
-                                  10 + gap/2 + extention: 
+                                  
                             [['a_circle', 'superPink', .8],
                              ['an_ellipse', 'Burgundy'],                             
                              ['a_drop', 'BubblePink'], 
@@ -59,7 +60,6 @@ shape_positions_colors_params = { 1 + gap/2 + extention:
                              ['a_crescent', 'dimgray', 1., 
                                           ['darkgray', 1.35, {'depth_2' : -2.5, 'turn' : -3}]],
                              ['a_squiggle', 'orchid', .8, ['darkorchid', .8, {'speed_x' : 5}]]],
-                                  28 + extention: 
                             [['a_segment', 'yellow'],
                              ['a_zigzag', 'LightBlue'],
                              ['a_power_curve', 'red', 0.7],
@@ -72,48 +72,52 @@ shape_positions_colors_params = { 1 + gap/2 + extention:
                               ['darkorchid', .7, {'speed_x' : 1.5}],
                               ['Hyacinth', .7, {'speed_x' : 5/6, 'angle_end':160}]],
                              ['a_broken_line', 'turquoise', 1., ['darkturquoise', 1.]]],
-                                  canvas_height - (gap + text_height + shape_height) : 
-
-                              [['a_star', 'superBlue', 'shift', (3, .5), 0.5], 
+                             [['a_star', 'superBlue', 'shift', (3, .5), 0.5], 
                                ['a_square', 'superBlue', 'turn', 2], 
                                ['a_rhombus', 'superBlue', 'stretch', 1.8], 
                                ['a_drop', 'aquamarine', 'stretch_x', 1.5], 
-                               ['a_crescent', 'turquoise', 'stretch_y', 1.5]]
-}
-
-draw_a_rectangle(bottom=19.5+extention, height=get_canvas_height(), left=0, width=get_canvas_width(), color='black', layer_nb=-2)
-draw_a_rectangle(top=2 + 28, height=get_canvas_height(), left=0, width=get_canvas_width()/2, color='white', layer_nb=-2)
-draw_a_rectangle(height= gap + text_height + shape_height + 2, top=get_canvas_height(), 
-                 left=0, width=get_canvas_width(), color='plum', layer_nb=-2)
+                               ['a_crescent', 'turquoise', 'stretch_y', 1.5]]]
 
 set_default_linewidth(5)
-title_bboxes = [None, None]
+titles = []
+for text_, coeff, text_color in [['patches', .75, 'black'], ['lines', .25, 'white']]:
+  titles += [draw_a_speech_bubble(text=text_, fontsize=30,
+                       x=get_canvas_width()*coeff, y=sb.top+7*gap+2*(text_height+shape_height), 
+                       position='cb', color=text_color, background_color='none')]
+
+for width_coeff, color, bottom in [[1,  'plum',  0], 
+                                   [1, 'white',  sb.top+gap], 
+                                   [.5, 'black', titles[-1].bottom-gap],
+                                   [1, 'black',  titles[-1].top+gap], 
+                                   [1,  'plum',  titles[-1].top+3*gap+(text_height+shape_height)]]:
+  draw_a_rectangle(bottom=bottom, height=get_canvas_height(), left=0, 
+                   width=width_coeff*get_canvas_width(), color=color, layer_nb=-2, outline_linewidth=0)
+
+
+titles += [draw_a_speech_bubble(text='transformations', fontsize=30,
+                       x=get_canvas_width()*.5, y=titles[-1].top+5*gap+2*(text_height+shape_height), 
+                       position='cb', color='black', background_color='none')]
+
 c1, c2 = 2, 1
-for i, text_ in enumerate(['patches', 'lines']):
-  text_color = 'black' if i == 0 else 'white'
-  title = draw_a_speech_bubble(text=text_, fontsize=30,
-                       x=get_canvas_width() * (.25 + .5 * i), y=22.5 + extention, position='cc',
-                       color=text_color, background_color='black' if i == 1 else 'white')
-  title_bboxes[i] = title.get_bbox()
-  if i == 0:
-    y1, y2 = title_bboxes[i].ymax + gap/2, title_bboxes[i].ymin-gap/2
+for i, title in enumerate(titles):
+  if i != 1:
+    y1, y2, text_color = title.top + gap/2, title.bottom - gap/2, 'black'
   else:
-    y2, y1 = title_bboxes[i].ymax+gap/2, title_bboxes[i].ymin-gap/2
-  draw_a_broken_line([[title_bboxes[i].xmin-gap*(c1+c2), y2], [title_bboxes[i].xmin-gap*c1, y1], 
-                      [title_bboxes[i].xmax+gap*c1, y1], [title_bboxes[i].xmax+gap*(c1+c2), y2]], color=text_color)
-  draw_a_broken_line([[title_bboxes[i].xmin-gap*(c1-c2), y2], [title_bboxes[i].xmin-gap*c1, y1], 
-                      [title_bboxes[i].xmax+gap*c1, y1], [title_bboxes[i].xmax+gap*(c1-c2), y2]], color=text_color)
+    y2, y1, text_color = title.top + gap/2, title.bottom - gap/2, 'white'
+  draw_a_broken_line([[title.left-gap*(c1+c2), y2], [title.left-gap*c1, y1], 
+                      [title.right+gap*c1, y1], [title.right+gap*(c1+c2), y2]], color=text_color)
+  draw_a_broken_line([[title.left-gap*(c1-c2), y2], [title.left-gap*c1, y1], 
+                      [title.right+gap*c1, y1], [title.right+gap*(c1-c2), y2]], color=text_color)
+
 scale_default_fontsize(.36)
 
-
-draw_a_rectangle(bottom=0, height=extention-gap/2, left=0, width=get_canvas_width(), color='plum')
-draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parameters work!', 
-                          x=get_canvas_width()/2, y=(extention-gap/2)/2, position='cc', 
-                          fontsize=15, background_color='plum')
+bg_colors = ['black', 'black', 'white', 'black']
+text_ys = [sb.top+3*gap, sb.top+5*gap+1*(text_height+shape_height), 
+           titles[0].top+2*gap, titles[0].top+4*gap+1*(text_height+shape_height)]
 #######################################################
 # Now let's draw the shapes!                         ##
 
-for text_y, shapes_infos in shape_positions_colors_params.items():
+for i, (text_color, text_y, shapes_infos) in enumerate(zip(bg_colors, text_ys, shape_positions_colors_params)):
   layer_nb_bg = new_layer()
   layer_nb = new_layer()
 
@@ -121,10 +125,8 @@ for text_y, shapes_infos in shape_positions_colors_params.items():
   shape_y = text_y + text_height + 0.5 * shape_height
   for nb_shape, shapes_info in enumerate(shapes_infos):
     shapename = shapes_info[0]
-
-    text_color = 'white' if 40 > text_y > 18 else 'black'
     
-    sb = draw_a_speech_bubble(text=shapename if 40 > text_y else shapes_info[2], 
+    sb = draw_a_speech_bubble(text=shapename if i < 3 else shapes_info[2], 
                               x=x_so_far, y=text_y, color=text_color, background_color='none')
     long_params = shape_names_params_dicts_definition_plus[shapename]
 
@@ -142,14 +144,15 @@ for text_y, shapes_infos in shape_positions_colors_params.items():
               contour=a_curve if shapename in ('a_polygon', 'a_broken_line') else shapename)]
 
     zoom_factor = 1.
-    if (len(shapes_info) >= 3 and 40 > text_y) or (len(shapes_info) == 5 and 40 < text_y):
-      zoom_or_params = shapes_info[2 if 40 > text_y else -1]
+    if (len(shapes_info) >= 3 and i != 3) or (len(shapes_info) == 5 and i == 3):
+      zoom_or_params = shapes_info[2 if i != 3 else -1]
       if not isinstance(zoom_or_params, dict):
         zoom_factor = zoom_or_params
+    print('zoom_factor', zoom_factor, 'text_y', text_y)
     shs[0].stretch(zoom_factor)
     shs[0].shift_to_position(xy=[x_so_far, shape_y], position='lc')
 
-    if 40 > text_y:
+    if i != 3:
       x_so_far += shs[-1].get_bbox().width
       for sh_ in shapes_info[3:]:
         x_so_far += gap
