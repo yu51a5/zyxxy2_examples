@@ -34,7 +34,7 @@ shape_names_params_dicts_definition_plus = {k : v for k, v in shape_names_params
 shape_names_params_dicts_definition_plus.update({'a_polygon' : {}, 'a_broken_line' : {}})
 
 gap, text_height, shape_height = 1, 1.5, 5.5
-create_canvas_and_axes(canvas_width=71, canvas_height=52)
+create_canvas_and_axes(canvas_width=71, canvas_height=53)
 
 sb = draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parameters work!', 
                           x=get_canvas_width()/2, y=gap, position='cb', 
@@ -72,30 +72,32 @@ shape_positions_colors_params = [
                               ['darkorchid', .7, {'speed_x' : 1.5}],
                               ['Hyacinth', .7, {'speed_x' : 5/6, 'angle_end':160}]],
                              ['a_broken_line', 'turquoise', 1., ['darkturquoise', 1.]]],
-                             [['a_star', 'superBlue', 'shift', (3, .5), 0.5], 
-                               ['a_square', 'superBlue', 'turn', 2], 
+                             [['a_wave', 'superBlue', 'shift', (3, .5), 0.5], 
+                               ['a_triangle', 'superBlue', 'turn', 3], 
                                ['a_rhombus', 'superBlue', 'stretch', 1.8], 
                                ['a_drop', 'aquamarine', 'stretch_x', 1.5], 
-                               ['a_crescent', 'turquoise', 'stretch_y', 1.5]]]
+                               ['a_crescent', 'turquoise', 'stretch_y', 1.5], 
+                               ['an_arc', 'turquoise', 'shift_x', 1.5], 
+                               ['a_zigzag', 'turquoise', 'shift_y', 1.5]]]
 
 set_default_linewidth(5)
 titles = []
-for text_, coeff, text_color in [['patches', .75, 'black'], ['lines', .25, 'white']]:
+for text_, coeff, text_color, gc in [['patches', .75, 'black', -1], ['lines', .25, 'white', 1]]:
   titles += [draw_a_speech_bubble(text=text_, fontsize=30,
-                       x=get_canvas_width()*coeff, y=sb.top+7*gap+2*(text_height+shape_height), 
+                       x=get_canvas_width()*coeff, y=sb.top+(6+gc)*gap+2*(text_height+shape_height), 
                        position='cb', color=text_color, background_color='none')]
 
 for width_coeff, color, bottom in [[1,  'plum',  0], 
                                    [1, 'white',  sb.top+gap], 
-                                   [.5, 'black', titles[-1].bottom-gap],
-                                   [1, 'black',  titles[-1].top+gap], 
-                                   [1,  'plum',  titles[-1].top+3*gap+(text_height+shape_height)]]:
+                                   [.5, 'black', titles[0].bottom+gap/2],
+                                   [1, 'black',  titles[0].top+gap*1.5], 
+                                   [1,  'plum',  titles[1].top+3*gap+(text_height+shape_height)]]:
   draw_a_rectangle(bottom=bottom, height=get_canvas_height(), left=0, 
                    width=width_coeff*get_canvas_width(), color=color, layer_nb=-2, outline_linewidth=0)
 
 
 titles += [draw_a_speech_bubble(text='transformations', fontsize=30,
-                       x=get_canvas_width()*.5, y=titles[-1].top+5*gap+2*(text_height+shape_height), 
+                       x=get_canvas_width()*.5, y=titles[1].top+6*gap+2*(text_height+shape_height), 
                        position='cb', color='black', background_color='none')]
 
 c1, c2 = 2, 1
@@ -112,8 +114,8 @@ for i, title in enumerate(titles):
 scale_default_fontsize(.36)
 
 bg_colors = ['black', 'black', 'white', 'black']
-text_ys = [sb.top+3*gap, sb.top+5*gap+1*(text_height+shape_height), 
-           titles[0].top+2*gap, titles[0].top+4*gap+1*(text_height+shape_height)]
+text_ys = [sb.top+3*gap, sb.top+4*gap+1*(text_height+shape_height), 
+           titles[0].top+3*gap, titles[0].top+7*gap+1*(text_height+shape_height)]
 #######################################################
 # Now let's draw the shapes!                         ##
 
@@ -148,7 +150,7 @@ for i, (text_color, text_y, shapes_infos) in enumerate(zip(bg_colors, text_ys, s
       zoom_or_params = shapes_info[2 if i != 3 else -1]
       if not isinstance(zoom_or_params, dict):
         zoom_factor = zoom_or_params
-    print('zoom_factor', zoom_factor, 'text_y', text_y)
+
     shs[0].stretch(zoom_factor)
     shs[0].shift_to_position(xy=[x_so_far, shape_y], position='lc')
 
@@ -169,9 +171,9 @@ for i, (text_color, text_y, shapes_infos) in enumerate(zip(bg_colors, text_ys, s
       shs.append(clone_a_shape(shs[0]))
       an_attr = getattr(shs[0], shapes_info[2])
       an_attr(shapes_info[3])
-
+      shift_value = x_so_far - min([sh2.left for sh2 in shs])
       for sh in shs:
-        sh.left += x_so_far - min([sh2.left for sh2 in shs])
+        sh.left += shift_value
       shs[0].color = 'Purple'
       shs[0].opacity = .5
       shs[1].color = 'superPink'
@@ -189,6 +191,6 @@ for i, (text_color, text_y, shapes_infos) in enumerate(zip(bg_colors, text_ys, s
                      outline_color=text_color, layer_nb=layer_nb_bg, color='none')
     x_so_far = right+gap
 
-  shift_layers(shift=[get_canvas_width() / 2 - (x_so_far + gap) / 2, 0], layer_nbs=[layer_nb_bg, layer_nb])
+  shift_layers(shift=[get_canvas_width() / 2 - x_so_far / 2, 0], layer_nbs=[layer_nb_bg, layer_nb])
 
 show_and_save()
