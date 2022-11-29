@@ -15,14 +15,14 @@
 ########################################################################
 
 from yyyyy_canvas import create_canvas_and_axes, show_and_save
-from yyyyy_shape_functions import draw_a_rectangle, draw_a_broken_line, draw_a_polygon, clone_a_shape
+from yyyyy_shape_functions import draw_a_circle, draw_a_rectangle, draw_a_broken_line, draw_a_polygon, clone_a_shape, draw_a_smile
 from yyyyy_word_bubbles import draw_a_speech_bubble
 from yyyyy_shape_style import scale_default_fontsize, get_canvas_height, get_canvas_width, set_default_linewidth
 from yyyyy_coordinates import shape_names_params_dicts_definition, get_type_given_shapename, build_a_smile, build_a_zigzag
 from demo_yyyyy_shape_helper import slider_range
 import numpy as np
 from random import random, randint
-from yyyyy_layers import new_layer, shift_layers
+from yyyyy_layers import new_layer, shift_layers, turn_layers
 
 smile = build_a_smile(width=3, depth=0.5)
 zigzag = build_a_zigzag(width=3, height=0.5, angle_start=-3, nb_segments=6)
@@ -39,6 +39,9 @@ create_canvas_and_axes(canvas_width=71, canvas_height=53)
 sb = draw_a_speech_bubble(text='Run demo_yyyyy_shape.py to see how the shape parameters work!', 
                           x=get_canvas_width()/2, y=gap, position='cb', 
                           fontsize=15, background_color='plum')
+
+titles_bottom = sb.top+5*gap+2*(text_height+shape_height)
+titles_top = titles_bottom + 6
 
 shape_positions_colors_params = [ 
                             [['a_square', 'superBlue'], 
@@ -80,42 +83,50 @@ shape_positions_colors_params = [
                                ['an_arc', 'turquoise', 'shift_x', 1.5], 
                                ['a_zigzag', 'turquoise', 'shift_y', 1.5]]]
 
-set_default_linewidth(5)
-titles = []
-for text_, coeff, text_color, gc in [['patches', .75, 'black', -1], ['lines', .25, 'white', 1]]:
-  titles += [draw_a_speech_bubble(text=text_, fontsize=30,
-                       x=get_canvas_width()*coeff, y=sb.top+(6+gc)*gap+2*(text_height+shape_height), 
-                       position='cb', color=text_color, background_color='none')]
-
 for width_coeff, color, bottom in [[1,  'plum',  0], 
                                    [1, 'white',  sb.top+gap], 
-                                   [.5, 'black', titles[0].bottom+gap/2],
-                                   [1, 'black',  titles[0].top+gap*1.5], 
-                                   [1,  'plum',  titles[1].top+3*gap+(text_height+shape_height)]]:
+                                   [.5, 'black', titles_bottom+gap/2],
+                                   [1, 'black',  titles_top-gap*.5], 
+                                   [1,  'plum',  titles_top+3*gap+(text_height+shape_height)]]:
   draw_a_rectangle(bottom=bottom, height=get_canvas_height(), left=0, 
                    width=width_coeff*get_canvas_width(), color=color, layer_nb=-2, outline_linewidth=0)
 
-
-titles += [draw_a_speech_bubble(text='transformations', fontsize=30,
-                       x=get_canvas_width()*.5, y=titles[1].top+6*gap+2*(text_height+shape_height), 
-                       position='cb', color='black', background_color='none')]
-
+set_default_linewidth(5)
 c1, c2 = 2, 1
-for i, title in enumerate(titles):
-  if i != 1:
-    y1, y2, text_color = title.top + gap/2, title.bottom - gap/2, 'black'
-  else:
-    y2, y1, text_color = title.top + gap/2, title.bottom - gap/2, 'white'
+for text_, coeff, text_color, bt, pos_y, eye_color in \
+                [['patches', .75, 'black', 'b', titles_bottom, 'white'], 
+                 ['lines', .25, 'white', 't', titles_top, 'black'],
+                 ['transformations', .5, 'black', 'b', titles_top+6*gap+2*(text_height+shape_height), 'plum']]:
+
+  lnb0 = new_layer()
+  title = draw_a_speech_bubble(text=text_, fontsize=20,
+                       x=get_canvas_width()*coeff, y=pos_y, 
+                       position='c'+bt, color=text_color, background_color='none')
+  lnb1 = new_layer()
+  y1, y2 = title.top + gap/2, title.bottom - gap/2
   draw_a_broken_line([[title.left-gap*(c1+c2), y2], [title.left-gap*c1, y1], 
                       [title.right+gap*c1, y1], [title.right+gap*(c1+c2), y2]], color=text_color)
   draw_a_broken_line([[title.left-gap*(c1-c2), y2], [title.left-gap*c1, y1], 
                       [title.right+gap*c1, y1], [title.right+gap*(c1-c2), y2]], color=text_color)
+  
+  for j in [-1, 1]:
+    center_x = title.center_x + j * 3
+    draw_a_smile(diamond=(center_x, y1), width=1.8, depth=-1.8, color=text_color)
+    draw_a_circle(center=(center_x, y1+.7), radius=.5, color=text_color, outline_linewidth=0)
+    draw_a_circle(center=(center_x-.25, y1+.7-.25), radius=.2, color=eye_color, outline_linewidth=0)
+  
+  lnb2 = new_layer()
+  draw_a_broken_line([[0, y2],[get_canvas_width(), y2]], color=text_color)
+  if eye_color == 'black':
+    turn_layers(turn=6, diamond=[title.center_x, y1], layer_nbs=[lnb1, lnb2]) 
+    shift_layers(shift=(0, title.bottom - title.top - gap), layer_nbs=[lnb1, lnb2])
+
 
 scale_default_fontsize(.36)
 
 bg_colors = ['black', 'black', 'white', 'black']
 text_ys = [sb.top+3*gap, sb.top+4*gap+1*(text_height+shape_height), 
-           titles[0].top+3*gap, titles[0].top+7*gap+1*(text_height+shape_height)]
+           titles_top+1*gap, titles_top+5*gap+1*(text_height+shape_height)]
 #######################################################
 # Now let's draw the shapes!                         ##
 

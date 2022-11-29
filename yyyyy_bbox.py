@@ -22,7 +22,9 @@ class ObjPosition:
     self.name = name
     if name in ObjPosition.pos_dic:
       self.box_name = ObjPosition.pos_dic[name]
-    elif name not in ['center_x', 'center_y']:
+    elif name in ['center_x', 'center_y']:
+      self.box_name = '_'
+    else:
       raise Exception(f'{name} is not recognised')
 
   def __get__(self, instance, owner=None):

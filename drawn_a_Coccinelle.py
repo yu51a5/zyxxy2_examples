@@ -1,6 +1,7 @@
 from yyyyy_canvas import create_canvas_and_axes, show_and_save
 from yyyyy_shape_functions import draw_a_sector, draw_a_circle, draw_an_arc
 from yyyyy_utils import asin
+from yyyyy_animation import show_and_save_basic_animation
 
 # based on https://www.pinterest.com/pin/701013498245673792/
 # colors are identified using https://html-color-codes.info/colors-from-image/#
@@ -38,4 +39,7 @@ for radius in [1.25, 2.25, 3.25, 4.25]:
   draw_an_arc(center_x=0, center_y=-7.25, radius=radius, angle_start=3-angle_to_horizontal, angle_end=9+angle_to_horizontal, linewidth=9, color='black', stretch_coeff=0.9, stretch_direction='x')
 
 #######################################################
-show_and_save()
+#show_and_save()
+show_and_save_basic_animation(qty_frames_for_each_visualization= 5, 
+                               qty_frames_for_move              =30, 
+                               qty_frames_wait_at_the_end       =30)

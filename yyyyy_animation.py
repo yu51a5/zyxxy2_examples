@@ -1,5 +1,6 @@
 import numpy as np
 from math import floor
+from yyyyy_canvas import show_and_save
 
     #all_shapes = Shape._get_all_shapes_in_layers()
     #total_init_frames = qty_frames_for_each_visualization * len(all_shapes) + qty_frames_for_move + qty_frames_wait_at_the_end
@@ -70,3 +71,12 @@ def anim_show_put_together_by_groups(i, all_shapes, correct_diamonds, other_diam
       all_shapes[s].shift_to(other_diamonds[s] + (correct_diamonds[s] - other_diamonds[s]) * j / qty_frames_for_move)
 
   return total_init_frames, [all_shapes[s] for s in range(group_sizes_cumsum[gr_num],  group_sizes_cumsum[gr_num+1])]
+
+###################################################################################################
+def show_and_save_basic_animation(qty_frames_for_each_visualization, qty_frames_for_move, qty_frames_wait_at_the_end, **qwargs):
+
+  frames_qty, animation_func = anim_putting_together_one_by_one(
+                           qty_frames_for_each_visualization=qty_frames_for_each_visualization, 
+                           qty_frames_for_move=qty_frames_for_move, 
+                           qty_frames_wait_at_the_end=qty_frames_wait_at_the_end)
+  show_and_save(animation_func=animation_func, frames_qty=frames_qty, **qwargs)
