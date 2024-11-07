@@ -17,8 +17,8 @@
 import matplotlib.pyplot as plt
 
 from yyyyy_canvas import show_demo, prepare_axes
-from MY_yyyyy_SETTINGS_demo import figure_params
-from MY_yyyyy_SETTINGS_widgets import widget_params
+from zyxxy2 import figure_params
+from zyxxy2 import widget_params
 from MY_yyyyy_SETTINGS_general import my_default_display_params, my_default_font_sizes, my_default_image_params
 from yyyyy_shape_functions import draw_a_square
 from yyyyy_widgets import add_a_slider, get_widget_value
