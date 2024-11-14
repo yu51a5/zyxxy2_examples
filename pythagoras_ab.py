@@ -1,13 +1,13 @@
-import sys; sys.path.insert(0, '.') 
-from yyyyy_shape_functions import draw_a_segment
-from yyyyy_canvas import create_canvas_and_axes, show_and_save
-from yyyyy_shape_functions import draw_a_polygon, draw_a_square, draw_a_rectangle
-from math import sqrt
-from yyyyy_shape_style import set_default_linewidth
-from yyyyy_utils import atan, random_integer_number
 from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import numpy as np
+from math import sqrt
+
+from zyxxy2 import atan, random_integer_number
+from zyxxy2 import create_canvas_and_axes, show_and_save, draw_a_segment, draw_a_polygon, draw_a_square, draw_a_rectangle
+
+from zyxxy2 import set_default_linewidth
+
 
 mouse, penguin, margin = random_integer_number(3, 10), random_integer_number(3, 10), 3
 black_length = 9

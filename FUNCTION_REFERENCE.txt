@@ -2,7 +2,6 @@
 ##############################################################################
 
 Functions That Create Patches
-from yyyyy_shape_functions import
 
 draw_a_triangle(tip_x, tip_y, width, height)
 draw_a_square(['left', 'right'], ['bottom', 'top'], side)
@@ -30,7 +29,6 @@ Admissible Movement Arguments:
 ##############################################################################
 
 Functions That Create Lines
-from yyyyy_shape_functions import
 
 draw_a_segment(start_x, start_y, length)
 draw_a_power_curve(start_x, start_y, end_1, end_2, power, nb_intermediate_points)
@@ -50,15 +48,12 @@ Admissible Movement Arguments:
 ##############################################################################
 
 Another Function That Can Create A Shape
-from yyyyy_shape_functions import
 
 clone_a_shape(init_shape)
 
 ##############################################################################
 
 Layer-Related Functions
-from yyyyy_layers import
-
 
 # adding new layers
 new_layer()
@@ -75,7 +70,6 @@ stretch_layers_with_direction(diamond, stretch_coeff, stretch_direction, layer_n
 ##############################################################################
 
 Default Shape Style-Related Functions
-from yyyyy_shape_style import
 
 set_default_line_style(color, layer_nb, linewidth, joinstyle, capstyle, diamond_color)
 set_default_patch_style(color, layer_nb, opacity, outline_color, outline_layer_nb, outline_linewidth, outline_joinstyle, outline_capstyle, diamond_color)
@@ -94,8 +88,6 @@ set_default_layer_nb(what, layer_nb)
 ##############################################################################
 
 Utility Functions
-from yyyyy_utils import
-
 
 ## ALGEBRA HELPERS ## 
 is_an_integer(val)
@@ -174,7 +166,6 @@ Default Shape Style-Related Functions
 ##############################################################################
 
 color-Related Functions
-from yyyyy_colors import
 
 find_color_code(color_name)
 create_gradient_colors(rgb_start, rgb_end)
@@ -182,8 +173,6 @@ create_gradient_colors(rgb_start, rgb_end)
 ##############################################################################
 
 Functions That Create Examples
-from yyyyy_all_EXAMPLES import
-
 
 ## THE FLAGS ##
 example_japanese_flag()
@@ -206,13 +195,4 @@ example_yellow_cat_animation(cat_color=Yellow, background_color=SeaWave)
 
 ## THE CROC ##
 example_croc(model=https://i.pinimg.com/564x/94/36/06/9436061bc2e46c9b382b56dfb58b8db0.jpg)
-example_ani_mated_croc()
-
-## lots of arcs
-example_arcs()
-example_raindrops_animation(blit=True)
-example_raindrops_animation0(use_yyyyy_canvas=True)
-example_raindrops_animationS()
-example_raindrops_animationS2()
-example_raindrops_animationS3()
-example_raindrops_animationS0()
+example_animated_croc()

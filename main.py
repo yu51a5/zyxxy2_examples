@@ -37,14 +37,14 @@
 # import draw_puzzle_segments
 # import draw_rectangles 
 
-# import draw_a_gradient
+import draw_a_gradient
 # import gradient_rectangle
 # import catch_a_checker
 # import draw_perspective
 # import drawn_a_Coccinelle
 # import drawn_blue_green_mandala
 
-import draw_perspective
+# import draw_perspective
 
 # example_croc()
 # example_penguins()

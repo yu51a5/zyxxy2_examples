@@ -1,8 +1,8 @@
 # This file is regenerated every time you press 'Dump Python File' button
 # Rename it if you want to keep the contents
 
-from yyyyy_canvas import create_canvas_and_axes, show_and_save
-from yyyyy_shape_functions import draw_a_triangle, draw_a_square
+from zyxxy2 import create_canvas_and_axes, show_and_save
+from zyxxy2 import draw_a_triangle, draw_a_square
 
 create_canvas_and_axes(canvas_width = 20, canvas_height = 14, tick_step = 1)
 

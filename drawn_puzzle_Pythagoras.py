@@ -1,6 +1,6 @@
-from yyyyy_canvas import create_canvas_and_axes, wait_for_enter
-from yyyyy_utils import atan, random_integer_number, calc_Pythagoras
-from yyyyy_shape_functions import draw_a_square, clone_a_shape, draw_a_polygon
+from zyxxy2 import create_canvas_and_axes, wait_for_enter
+from zyxxy2 import atan, random_integer_number, calc_Pythagoras
+from zyxxy2 import draw_a_square, clone_a_shape, draw_a_polygon
 import matplotlib.pyplot as plt
 from MY_yyyyy_SETTINGS_general import my_default_font_sizes
 
